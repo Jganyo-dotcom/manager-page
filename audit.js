@@ -1,4 +1,5 @@
-const BaseApi = "http://127.0.0.1:4444";
+// const BaseApi = "http://127.0.0.1:4444";
+const BaseApi = "https://medsec.onrender.com";
 const logBody = document.getElementById("logBody");
 const resultCountEl = document.getElementById("resultCount"); // optional if you add this span in header
 
