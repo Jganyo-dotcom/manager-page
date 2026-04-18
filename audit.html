@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audit Logs | MedManager Enterprise</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="audit.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Professional Sidebar Navigation (Desktop) -->
+      <nav class="sidebar">
+        <div class="brand">
+          <div class="logo">✚</div>
+          <span>MedManager</span>
+        </div>
+        <a href="dash.html" class="nav-link">Dashboard</a>
+        <a href="#" class="nav-link active">Security Audit</a>
+        <a href="#" class="nav-link">Staff Directory</a>
+      </nav>
+
+      <main class="content-area">
+        <header class="page-header">
+          <div class="title-meta">
+            <h1>Security Audit Logs</h1>
+            <p>System-wide authentication records and access history.</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary" onclick="loadAuditLogs()">
+              Refresh Data
+            </button>
+            <button class="btn btn-primary">Export CSV</button>
+          </div>
+        </header>
+
+        <section class="filters-card">
+          <div class="search-input-group">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="logSearch"
+              placeholder="Filter by manager name, email, or activity..."
+              onkeyup="filterLogs()"
+            />
+          </div>
+        </section>
+
+        <div class="data-card">
+          <div class="table-wrapper">
+            <table id="auditTable">
+              <thead>
+                <tr>
+                  <th>Manager</th>
+                  <th>Authentication Email</th>
+                  <th>Event Timestamp</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody id="logBody">
+                <!-- Logs injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="audit.js"></script>
+  </body>
+</html>

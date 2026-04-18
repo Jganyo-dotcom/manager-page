@@ -1,0 +1,153 @@
+:root {
+  --primary: #2563eb;
+  --text-dark: #0f172a;
+  --text-light: #64748b;
+  --bg-main: #f8fafc;
+  --border: #e2e8f0;
+  --white: #ffffff;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+#sidebar {
+  width: 260px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.nav-item {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: var(--text-light);
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+}
+
+.nav-item.active {
+  background: #eff6ff;
+  color: var(--primary);
+}
+.nav-icon {
+  font-size: 1.1rem;
+}
+
+/* Content Visibility Logic */
+.view-content {
+  display: none;
+  width: 100%;
+}
+.view-content.active {
+  display: block;
+}
+
+main {
+  flex: 1;
+  padding: 2.5rem;
+}
+
+/* Table & Cards */
+.data-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  background: #f1f5f9;
+  padding: 12px 20px;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+/* Mobile Adaptability */
+.mobile-top-bar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  #sidebar {
+    position: fixed;
+    left: -280px;
+    height: 100vh;
+    z-index: 1000;
+  }
+  #sidebar.open {
+    transform: translateX(280px);
+  }
+  main {
+    padding: 1rem;
+    padding-top: 5rem;
+  }
+  .mobile-top-bar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    z-index: 900;
+  }
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+.modal {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 450px;
+  width: 100%;
+}
