@@ -166,10 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "audit";
   }
 
-  async function viewSettings() {
-    window.location.href = "settings";
-  }
-
   // Initial load
   loadManagers();
 });
+
+async function viewSettings() {
+  window.location.href = "settings";
+}
