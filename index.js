@@ -163,7 +163,7 @@ async function removeManager(id) {
 
 // View audit logs
 async function viewLoginHistory() {
-  window.location.href = "audit.html";
+  window.location.href = "audit";
 }
 
 // Initial load

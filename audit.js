@@ -1,47 +1,54 @@
-// const BaseApi = "http://127.0.0.1:4444";
+//const BaseApi = "http://127.0.0.1:4444";
 const BaseApi = "https://medsec.onrender.com";
 const logBody = document.getElementById("logBody");
-const resultCountEl = document.getElementById("resultCount"); // optional if you add this span in header
+const resultCountEl = document.getElementById("resultCount"); // optional span in header
+const paginationDiv = document.getElementById("pagination"); // add <div id="pagination"></div> under table
+
+let allLogs = [];
+let currentPage = 1;
+const pageSize = 10;
 
 async function loadAuditLogs() {
   logBody.innerHTML = `<tr><td colspan="4" class="center muted">Loading security logs…</td></tr>`;
   if (resultCountEl) resultCountEl.textContent = "Loading…";
 
   try {
-    const token = localStorage.getItem("authToken"); // or however you store it
+    const token = localStorage.getItem("authToken");
 
     const res = await fetch(`${BaseApi}/api/login-history`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // attach your token here
+        Authorization: `Bearer ${token}`,
       },
     });
 
+    const payload = await res.json();
+
     if (!res.ok) {
-      // Show the actual message from the backend if available
-      const msg = res.message || "Unauthorized access.";
+      const msg = payload.message || "Unauthorized access.";
       logBody.innerHTML = `<tr><td colspan="4" class="center muted">${msg}</td></tr>`;
       if (resultCountEl) resultCountEl.textContent = "0 results";
       return;
     }
 
-    const payload = await res.json();
-    const logs = Array.isArray(payload.history) ? payload.history : [];
+    allLogs = Array.isArray(payload.history) ? payload.history : [];
 
-    if (logs.length === 0) {
+    if (allLogs.length === 0) {
       logBody.innerHTML = `<tr><td colspan="4" class="center muted">No login history found.</td></tr>`;
       if (resultCountEl) resultCountEl.textContent = "0 results";
       return;
     }
 
     // Sort newest first
-    logs.sort(
+    allLogs.sort(
       (a, b) =>
         new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt),
     );
 
-    renderLogs(logs);
+    currentPage = 1;
+    renderPage(currentPage);
+    renderPagination();
   } catch (err) {
     console.error("Audit log error:", err);
     logBody.innerHTML = `<tr><td colspan="4" class="center muted">Error loading audit data.</td></tr>`;
@@ -49,9 +56,13 @@ async function loadAuditLogs() {
   }
 }
 
-function renderLogs(logs) {
+function renderPage(page) {
   logBody.innerHTML = "";
-  logs.forEach((log) => {
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+  const pageItems = allLogs.slice(start, end);
+
+  pageItems.forEach((log) => {
     const staff = log.staff || {};
     const name = staff.name || "System";
     const email = staff.email || "-";
@@ -80,8 +91,48 @@ function renderLogs(logs) {
   });
 
   if (resultCountEl) {
-    resultCountEl.textContent = `${logs.length} entr${logs.length === 1 ? "y" : "ies"} found`;
+    resultCountEl.textContent = `${allLogs.length} entr${allLogs.length === 1 ? "y" : "ies"} total`;
   }
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(allLogs.length / pageSize);
+  paginationDiv.innerHTML = "";
+
+  // Previous button
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "Previous";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => {
+    currentPage--;
+    renderPage(currentPage);
+    renderPagination();
+  };
+  paginationDiv.appendChild(prevBtn);
+
+  // Page numbers
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = i === currentPage ? "active" : "";
+    btn.onclick = () => {
+      currentPage = i;
+      renderPage(currentPage);
+      renderPagination();
+    };
+    paginationDiv.appendChild(btn);
+  }
+
+  // Next button
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.onclick = () => {
+    currentPage++;
+    renderPage(currentPage);
+    renderPagination();
+  };
+  paginationDiv.appendChild(nextBtn);
 }
 
 function filterLogs() {
