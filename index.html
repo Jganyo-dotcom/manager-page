@@ -355,15 +355,16 @@
       //const BaseApi = "http://127.0.0.1:4444";
       const BaseApi = "https://medsec.onrender.com";
       document.addEventListener("DOMContentLoaded", () => {
-       
-        async function autoLogin() {
+        window.onload = async function () {
+          // make sure this is defined
           const token = localStorage.getItem("authToken");
           if (!token) {
             return;
           } // no token, stay on login page
 
           try {
-            const res = await fetch(`${BaseApi}/api/verimfy-token`, {
+            console.log("loaded");
+            const res = await fetch(`${BaseApi}/api/verify-token`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -372,10 +373,11 @@
             });
 
             const data = await res.json();
+            console.log("Verify response:", data);
 
             if (data.valid) {
               // Token is valid → redirect straight to dashboard
-              window.location.href = "dash";
+              window.location.href = "dash"; // or "/dash.html"
 
               // Example: update UI with manager name
               const nameEl = document.getElementById("myName");
@@ -392,8 +394,8 @@
             localStorage.removeItem("authToken");
             window.location.href = "/";
           }
-        }
-        autoLogin();
+        };
+
         // --- UI LOGIC ---
         function toggleModal(show) {
           modal.style.display = show ? "flex" : "none";
