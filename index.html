@@ -355,12 +355,15 @@
       //const BaseApi = "http://127.0.0.1:4444";
       const BaseApi = "https://medsec.onrender.com";
       document.addEventListener("DOMContentLoaded", () => {
+       
         async function autoLogin() {
           const token = localStorage.getItem("authToken");
-          if (!token) return; // no token, stay on login page
+          if (!token) {
+            return;
+          } // no token, stay on login page
 
           try {
-            const res = await fetch(`${BaseApi}/api/verify-token`, {
+            const res = await fetch(`${BaseApi}/api/verimfy-token`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
