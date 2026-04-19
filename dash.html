@@ -24,13 +24,13 @@
 
       <div class="nav-item active">Dashboard</div>
       <div class="nav-item" onclick="viewLoginHistory()">Audit Logs</div>
-      <div style="margin-top: auto" class="nav-item">Settings</div>
+      <div style="margin-top: auto" class="nav-item" onclick="viewSettings()"">Settings</div>
     </nav>
 
     <main>
       <div class="header-bar">
         <div class="title-group">
-          <h2>Manager Directory</h2>
+          <h2 id="myname">Manager Directory</h2>
           <p class="subtitle">Manage administrative accounts and security.</p>
         </div>
         <button class="btn btn-primary" onclick="toggleModal(true)">

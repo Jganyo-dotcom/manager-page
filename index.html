@@ -352,54 +352,111 @@
       const submitBtn = document.getElementById("submitBtn");
       const btnText = document.getElementById("btnText");
       const btnSpinner = document.getElementById("btnSpinner");
-
-      // const BaseApi = "http://127.0.0.1:4444";
+      //const BaseApi = "http://127.0.0.1:4444";
       const BaseApi = "https://medsec.onrender.com";
+      document.addEventListener("DOMContentLoaded", () => {
+        async function autoLogin() {
+          const token = localStorage.getItem("authToken");
+          if (!token) return; // no token, stay on login page
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+          try {
+            const res = await fetch(`${BaseApi}/api/verify-token`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            });
 
-        // Reset state
-        errorMsg.style.display = "none";
-        btnText.textContent = "Verifying...";
-        btnSpinner.style.display = "block";
-        submitBtn.disabled = true;
+            const data = await res.json();
 
-        const email = document.getElementById("identifier").value;
-        const password = document.getElementById("password").value;
+            if (data.valid) {
+              // Token is valid → redirect straight to dashboard
+              window.location.href = "dash";
 
-        try {
-          const response = await fetch(`${BaseApi}/api/login-manager`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-          });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            // Save the token for later use
-            localStorage.setItem("authToken", data.token);
-
-            // Success animation
-            submitBtn.style.background = "var(--success)";
-            btnText.textContent = "Access Granted";
-
-            setTimeout(() => {
-              window.location.href = "/dash";
-            }, 800);
-          } else {
-            throw new Error(data.message || "Unauthorized access.");
+              // Example: update UI with manager name
+              const nameEl = document.getElementById("myName");
+              if (nameEl) {
+                nameEl.innerHTML = data.manager.name;
+              }
+            } else {
+              // Token invalid → clear storage and stay on login
+              localStorage.removeItem("authToken");
+              window.location.href = "/";
+            }
+          } catch (err) {
+            console.log("Auto-login error:", err);
+            localStorage.removeItem("authToken");
+            window.location.href = "/";
           }
-        } catch (err) {
-          errorMsg.style.display = "block";
-          errorMsg.textContent = err.message || "Connection failed.";
-
-          // Reset button
-          btnText.textContent = "Sign in to Dashboard";
-          btnSpinner.style.display = "none";
-          submitBtn.disabled = false;
         }
+        autoLogin();
+        // --- UI LOGIC ---
+        function toggleModal(show) {
+          modal.style.display = show ? "flex" : "none";
+        }
+
+        // // Mobile sidebar toggle
+        // if (menuToggle) {
+        //   menuToggle.addEventListener("click", () => {
+        //     sidebar.classList.toggle("open");
+        //   });
+        // }
+
+        // Close sidebar when clicking a nav item (on mobile)
+        document.querySelectorAll(".nav-item").forEach((item) => {
+          item.addEventListener("click", () => {
+            if (window.innerWidth <= 768) {
+              sidebar.classList.remove("open");
+            }
+          });
+        });
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Reset state
+          errorMsg.style.display = "none";
+          btnText.textContent = "Verifying...";
+          btnSpinner.style.display = "block";
+          submitBtn.disabled = true;
+
+          const email = document.getElementById("identifier").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const response = await fetch(`${BaseApi}/api/login-manager`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Save the token for later use
+              localStorage.setItem("authToken", data.token);
+
+              // Success animation
+              submitBtn.style.background = "var(--success)";
+              btnText.textContent = "Access Granted";
+
+              setTimeout(() => {
+                window.location.href = "/dash";
+              }, 800);
+            } else {
+              throw new Error(data.message || "Unauthorized access.");
+            }
+          } catch (err) {
+            errorMsg.style.display = "block";
+            errorMsg.textContent = err.message || "Connection failed.";
+
+            // Reset button
+            btnText.textContent = "Sign in to Dashboard";
+            btnSpinner.style.display = "none";
+            submitBtn.disabled = false;
+          }
+        });
       });
     </script>
   </body>

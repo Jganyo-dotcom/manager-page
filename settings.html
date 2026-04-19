@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | MedSec Dashboard</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <header class="dashboard-header">
+        <h1>Settings</h1>
+      </header>
+
+      <main class="dashboard-main">
+        <!-- Profile Info -->
+        <section class="card fade-in">
+          <h2>Your Information</h2>
+          <div id="profileInfo" class="profile-info">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- Change Password -->
+        <section class="card fade-in">
+          <h2>Change Password</h2>
+          <form id="passwordForm" class="form">
+            <label for="currentPass">Current Password</label>
+            <input type="password" id="currentPass" required />
+
+            <label for="newPass">New Password</label>
+            <input type="password" id="newPass" required />
+
+            <label for="confirmPass">Confirm New Password</label>
+            <input type="password" id="confirmPass" required />
+
+            <button type="submit" class="btn btn-primary">
+              Update Password
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="settings.js"></script>
+  </body>
+</html>
