@@ -161,14 +161,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // View audit logs
-  async function viewLoginHistory() {
-    window.location.href = "audit";
-  }
-
   // Initial load
   loadManagers();
 });
+
+// View audit logs
+async function viewLoginHistory() {
+  window.location.href = "audit";
+}
 
 async function viewSettings() {
   window.location.href = "settings";
