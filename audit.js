@@ -3,10 +3,23 @@ const BaseApi = "https://medsec.onrender.com";
 const logBody = document.getElementById("logBody");
 const resultCountEl = document.getElementById("resultCount"); // optional span in header
 const paginationDiv = document.getElementById("pagination"); // add <div id="pagination"></div> under table
-
+const role = localStorage.getItem("role");
+if (role !== "superior manager") {
+  document.querySelector("#blind").style.display = "none";
+}
 let allLogs = [];
 let currentPage = 1;
 const pageSize = 10;
+
+const token = localStorage.getItem("authToken");
+const socket = io("https://medsec.onrender.com", {
+  auth: { token },
+  transports: ["websocket"],
+});
+
+socket.on("connect", () => {
+  console.log("Socket connected:", socket.id);
+});
 
 async function loadAuditLogs() {
   logBody.innerHTML = `<tr><td colspan="4" class="center muted">Loading security logs…</td></tr>`;

@@ -24,7 +24,10 @@
 
       <div class="nav-item active">Dashboard</div>
       <div class="nav-item" onclick="viewLoginHistory()">Audit Logs</div>
-      <div style="margin-top: auto" class="nav-item" onclick="viewSettings()">Settings</div>
+      <div class="nav-item" onclick="viewApprovals()" id="blind">Approvals</div>
+      <div style="margin-top: auto" class="nav-item" onclick="viewSettings()">
+        Settings
+      </div>
     </nav>
 
     <main>
@@ -105,7 +108,7 @@
         </form>
       </div>
     </div>
-
+    <script src="https://medsec.onrender.com/socket.io/socket.io.js"></script>
     <script src="index.js"></script>
   </body>
 </html>

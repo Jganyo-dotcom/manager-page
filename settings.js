@@ -2,6 +2,10 @@
 const BaseApi = "https://medsec.onrender.com";
 const token = localStorage.getItem("authToken");
 const profileInfo = document.getElementById("profileInfo");
+const role = localStorage.getItem("role");
+if (role !== "superior manager") {
+  document.querySelector("#blind").style.display = "none";
+}
 
 // Fetch user info
 async function loadProfile() {

@@ -345,7 +345,7 @@
         </p>
       </div>
     </div>
-
+    <script src="https://medsec.onrender.com/socket.io/socket.io.js"></script>
     <script>
       const form = document.getElementById("loginForm");
       const errorMsg = document.getElementById("errorMsg");
@@ -354,16 +354,14 @@
       const btnSpinner = document.getElementById("btnSpinner");
       //const BaseApi = "http://127.0.0.1:4444";
       const BaseApi = "https://medsec.onrender.com";
+
       document.addEventListener("DOMContentLoaded", () => {
+        // --- AUTO LOGIN FLOW ---
         window.onload = async function () {
-          // make sure this is defined
           const token = localStorage.getItem("authToken");
-          if (!token) {
-            return;
-          } // no token, stay on login page
+          if (!token) return; // no token, stay on login page
 
           try {
-            console.log("loaded");
             const res = await fetch(`${BaseApi}/api/verify-token`, {
               method: "POST",
               headers: {
@@ -374,10 +372,23 @@
 
             const data = await res.json();
             console.log("Verify response:", data);
-
+            return;
             if (data.valid) {
-              // Token is valid → redirect straight to dashboard
-              window.location.href = "dash"; // or "/dash.htmlp"
+              // Connect socket with token
+              const socket = io("https://medsec.onrender.com", {
+                auth: { token },
+              });
+
+              socket.on("connect", () => {
+                console.log("Auto-login socket connected:", socket.id);
+              });
+
+              socket.on("managerAdded", (payload) => {
+                console.log("New manager added:", payload);
+              });
+
+              // Redirect straight to dashboard
+              window.location.href = "dash";
 
               // Example: update UI with manager name
               const nameEl = document.getElementById("myName");
@@ -385,7 +396,6 @@
                 nameEl.innerHTML = data.manager.name;
               }
             } else {
-              // Token invalid → clear storage and stay on login
               localStorage.removeItem("authToken");
               window.location.href = "/";
             }
@@ -396,27 +406,7 @@
           }
         };
 
-        // --- UI LOGIC ---
-        function toggleModal(show) {
-          modal.style.display = show ? "flex" : "none";
-        }
-
-        // // Mobile sidebar toggle
-        // if (menuToggle) {
-        //   menuToggle.addEventListener("click", () => {
-        //     sidebar.classList.toggle("open");
-        //   });
-        // }
-
-        // Close sidebar when clicking a nav item (on mobile)
-        document.querySelectorAll(".nav-item").forEach((item) => {
-          item.addEventListener("click", () => {
-            if (window.innerWidth <= 768) {
-              sidebar.classList.remove("open");
-            }
-          });
-        });
-
+        // --- LOGIN FORM FLOW ---
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
 
@@ -439,12 +429,30 @@
             const data = await response.json();
 
             if (response.ok) {
-              // Save the token for later use
+              // Save the token
+              if (data.manager.role === "EMR Manager") {
+                alert("unauthorized");
+                return;
+              }
               localStorage.setItem("authToken", data.token);
+              localStorage.setItem("role", data.manager.role);
 
               // Success animation
               submitBtn.style.background = "var(--success)";
               btnText.textContent = "Access Granted";
+
+              // Connect socket with token
+              const socket = io("https://medsec.onrender.com", {
+                auth: { token: data.token },
+              });
+
+              socket.on("connect", () => {
+                console.log("Login socket connected:", socket.id);
+              });
+
+              socket.on("managerAdded", (payload) => {
+                console.log("New manager added:", payload);
+              });
 
               setTimeout(() => {
                 window.location.href = "/dash";

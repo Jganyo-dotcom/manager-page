@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Approvals | MedManager Enterprise</title>
+    <link rel="stylesheet" href="approve.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="brand">
+          <div class="logo-icon">✚</div>
+          <span>MedManager</span>
+        </div>
+
+        <div class="nav-group">
+          <small class="nav-label">MAIN MENU</small>
+          <a href="dash" class="nav-link">
+            <span class="icon">⊞</span> Dashboard
+          </a>
+          <a href="audit" class="nav-link">
+            <span class="icon">📜</span> Audit Logs
+          </a>
+          <a href="approve" class="nav-link active">
+            <span class="icon">✓</span> Pending Approvals
+          </a>
+        </div>
+      </nav>
+
+      <!-- Loader overlay (add once in your HTML body) -->
+      <div id="ios-loader" class="loader-overlay" style="display: none">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-wrapper">
+        <header class="top-bar">
+          <div class="search-bar">
+            <input type="text" placeholder="Search approvals..." />
+          </div>
+          <div class="user-profile">
+            <div class="avatar">AD</div>
+            <span>Admin Control</span>
+          </div>
+        </header>
+
+        <main class="content-area">
+          <div class="page-title">
+            <h1>Approvals Queue</h1>
+            <p>
+              High-priority authorization requests requiring immediate action.
+            </p>
+          </div>
+
+          <section class="grid-section">
+            <!-- Manager Table -->
+            <div class="data-card">
+              <div class="card-header">
+                <h2>New Manager Access</h2>
+                <span class="badge" id="managerCount">0</span>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Credentials</th>
+                      <th>Request Date</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="managerApprovals">
+                    <!-- Rows injected here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Reset Table -->
+            <div class="data-card">
+              <div class="card-header">
+                <h2>Security Reset Requests</h2>
+                <span class="badge badge-warning" id="resetCount">0</span>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Manager</th>
+                      <th>Email</th>
+                      <th>Request Date</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resetApprovals">
+                    <!-- Rows injected here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script src="http://localhost:4444/socket.io/socket.io.js"></script>
+    <script src="approve.js"></script>
+  </body>
+</html>
