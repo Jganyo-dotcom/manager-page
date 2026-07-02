@@ -420,7 +420,7 @@
           const password = document.getElementById("password").value;
 
           try {
-            const response = await fetch(`${BaseApi}/api/login-manager`, {
+            const response = await fetch(`${BaseApi}/api/login-mist-developer`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ email, password }),
